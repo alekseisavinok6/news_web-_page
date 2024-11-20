@@ -2,16 +2,12 @@
 session_start();
 $conn = new mysqli("localhost", "root", "", "NoticiasDB");
 
-// Configurar la cookie de usuario (si no existe)
 if (!isset($_SESSION['usuario_cookie'])) {
-    $_SESSION['usuario_cookie'] = 'usuario_' . rand(1000, 9999); // Identificador único
+    $_SESSION['usuario_cookie'] = 'usuario_'.rand(1000, 9999);
 }
 
-// Consultar noticias de la base de datos
 $result = $conn->query("SELECT * FROM noticias");
 $noticias = $result->fetch_all(MYSQLI_ASSOC);
-
-// Usuario actual
 $usuario = $_SESSION['usuario_cookie'];
 ?>
 
@@ -29,29 +25,25 @@ $usuario = $_SESSION['usuario_cookie'];
             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Actualizar la página con la respuesta del servidor
                     var respuesta = JSON.parse(xhr.responseText);
                     document.getElementById("resultado").innerHTML = `
-                        <div class="alert alert-success mt-3">
-                            ${respuesta.mensaje}
-                        </div>`;
+                        <div class="alert alert-info mt-3 p-2">${respuesta.mensaje}</div>`;
                 }
             };
-            // Enviar datos de la noticia y el usuario
             xhr.send("id_noticia=" + idNoticia + "&titulo=" + encodeURIComponent(titulo));
         }
     </script>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h1 class="text-center">Bienvenido, <?= htmlspecialchars($usuario) ?></h1>
-        <h2 class="mt-4">Noticias personalizadas</h2>
+        <h1 class="text-center display-5">Bienvenido, <?= htmlspecialchars($usuario) ?></h1>
+        <h2 class="mt-4 display-6">Noticias personalizadas</h2>
         <ul class="list-group mt-3">
             <?php foreach ($noticias as $noticia): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <?= htmlspecialchars($noticia['titulo']) ?>
-                    <button class="btn btn-primary btn-sm" onclick="verNoticia(<?= $noticia['id'] ?>, '<?= htmlspecialchars($noticia['titulo']) ?>')">
-                        Leer más
+                    <button class="btn btn-warning btn-sm" onclick="verNoticia(<?= $noticia['id'] ?>, '<?= htmlspecialchars($noticia['titulo']) ?>')">
+                        <em>Quiero leer</em>
                     </button>
                 </li>
             <?php endforeach; ?>

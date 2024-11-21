@@ -19,19 +19,29 @@ $usuario = $_SESSION['usuario_cookie'];
     <title>Noticias personalizadas</title>
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .noticia-titulo{
+            margin-bottom: 0;
+            font-size: 19px;
+        }
+        .noticia-contenido{
+            margin-bottom: 0;
+            font-size: 15px;
+        }
+    </style>
     <script>
-        function verNoticia(idNoticia, titulo) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "guardar.php", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var respuesta = JSON.parse(xhr.responseText);
+        function verNoticia(idNoticia, titulo, contenido) {
+            let myRequest = new XMLHttpRequest(); //AJAX
+            myRequest.open("POST", "guardar.php", true);
+            myRequest.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            myRequest.onreadystatechange = function() {
+                if (myRequest.readyState == 4 && myRequest.status == 200) {
+                    let respuesta = JSON.parse(myRequest.responseText);
                     document.getElementById("resultado").innerHTML = `
-                        <div class="alert alert-info mt-3 p-2">${respuesta.mensaje}</div>`;
+                        <div class="alert alert-info mt-3 p-1">${respuesta.mensaje}</div>`;
                 }
             };
-            xhr.send("id_noticia=" + idNoticia + "&titulo=" + encodeURIComponent(titulo));
+            myRequest.send("id_noticia="+idNoticia+"&titulo="+encodeURIComponent(titulo)+"&contenido="+encodeURIComponent(contenido));
         }
     </script>
 </head>
@@ -42,9 +52,10 @@ $usuario = $_SESSION['usuario_cookie'];
         <ul class="list-group mt-3">
             <?php foreach ($noticias as $noticia): ?>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <?= htmlspecialchars($noticia['titulo']) ?>
-                    <button class="btn btn-warning btn-sm" onclick="verNoticia(<?= $noticia['id'] ?>, '<?= htmlspecialchars($noticia['titulo']) ?>')">
-                        <em>Quiero leer</em>
+                    <p class="noticia-titulo"><?= htmlspecialchars($noticia['titulo']) ?></p>
+                    <i class="noticia-contenido"><?= htmlspecialchars($noticia['contenido']) ?></i>
+                    <button class="btn" onclick="verNoticia(<?= $noticia['id'] ?>, '<?= htmlspecialchars($noticia['titulo']) ?>', '<?= htmlspecialchars($noticia['contenido']) ?>')">
+                    <span style='font-size:20px;'>&#128209;</span>
                     </button>
                 </li>
             <?php endforeach; ?>

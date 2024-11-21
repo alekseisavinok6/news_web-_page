@@ -13,11 +13,12 @@ if (!isset($_SESSION['usuario_cookie'])) {
 
 $idNoticia = isset($_POST['id_noticia']) ? intval($_POST['id_noticia']) : null;
 $titulo = isset($_POST['titulo']) ? htmlspecialchars($_POST['titulo']) : null;
+$contenido = isset($_POST['contenido']) ? htmlspecialchars($_POST['contenido']) : null;
 $usuario = $_SESSION['usuario_cookie'];
 
-if ($idNoticia && $titulo) {
-    $stmt = $conn->prepare("INSERT INTO noticias_leidas (usuario_cookie, id_noticia, titulo) VALUES (?, ?, ?)");
-    $stmt->bind_param("sis", $usuario, $idNoticia, $titulo);
+if ($idNoticia && $titulo && $contenido) {
+    $stmt = $conn->prepare("INSERT INTO noticias_leidas (usuario_cookie, id_noticia, titulo, contenido) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("siss", $usuario, $idNoticia, $titulo, $contenido);
     $stmt->execute();
     $stmt->close();
 
@@ -29,6 +30,7 @@ if ($idNoticia && $titulo) {
         "mensaje" => "Has leído la noticia: '$titulo'. Datos guardados correctamente.",
         "id_noticia" => $idNoticia,
         "titulo" => $titulo
+        //"contenido" => $contenido
     ]);
 } else {
     echo json_encode(["error" => "Datos incompletos"]);

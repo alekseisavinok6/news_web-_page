@@ -7,13 +7,9 @@ if (!isset($_SESSION['usuario_cookie'])) {
     exit;
 }
 
-
-//Uso un operador ternario para asignar un valor a $idNoticia
-//Sintaxis: condición ? valor_si_true : valor_si_false
-
 $idNoticia = isset($_POST['id_noticia']) ? intval($_POST['id_noticia']) : null;
-$titulo = isset($_POST['titulo']) ? htmlspecialchars($_POST['titulo']) : null;
-$contenido = isset($_POST['contenido']) ? htmlspecialchars($_POST['contenido']) : null;
+$titulo = isset($_POST['titulo']) ? trim($_POST['titulo']) : null;
+$contenido = isset($_POST['contenido']) ? trim($_POST['contenido']) : null;
 $usuario = $_SESSION['usuario_cookie'];
 
 if ($idNoticia && $titulo && $contenido) {

@@ -3,12 +3,18 @@ session_start();
 $conn = new mysqli("localhost", "root", "", "NoticiasDB");
 
 if (!isset($_SESSION['usuario_cookie'])) {
-    $_SESSION['usuario_cookie'] = 'usuario_'.rand(1000, 9999);
+    $cookieValue = 'usuario_'.rand(100, 999);
+    setcookie('usuario_cookie', $cookieValue, time() + (86400 * 30), "/");
+    $_COOKIE['usuario_cookie'] = $cookieValue;
+    $_SESSION['usuario_cookie'] = $cookieValue;
+} else {
+    $_SESSION['usuario_cookie'] = $_COOKIE['usuario_cookie'];
 }
+
+$usuario = $_SESSION['usuario_cookie'];
 
 $result = $conn->query("SELECT * FROM noticias");
 $noticias = $result->fetch_all(MYSQLI_ASSOC);
-$usuario = $_SESSION['usuario_cookie'];
 ?>
 
 <!DOCTYPE html>
